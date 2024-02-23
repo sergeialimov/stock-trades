@@ -8,11 +8,8 @@ const Trade = sequelize.define('Trade', {
         primaryKey: true
     },
     type: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-            isIn: [['buy', 'sell']]
-        }
+        type: DataTypes.ENUM('buy', 'sell'),
+        allowNull: false
     },
     user_id: {
         type: DataTypes.INTEGER,
@@ -20,7 +17,11 @@ const Trade = sequelize.define('Trade', {
     },
     symbol: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            is: /^[A-Z]+$/i, // Ensure symbol is alphanumeric
+            len: [1, 5] // Assuming symbols are between 1 to 5 characters. TBD
+        }
     },
     shares: {
         type: DataTypes.INTEGER,
@@ -35,7 +36,7 @@ const Trade = sequelize.define('Trade', {
         allowNull: false
     },
     timestamp: {
-        type: DataTypes.BIGINT,
+        type: DataTypes.BIGINT, // To store timestamp in milliseconds
         allowNull: false
     }
 }, {
@@ -45,7 +46,7 @@ const Trade = sequelize.define('Trade', {
     indexes: [
         {
             unique: true,
-            fields: ['type', 'user_id']
+            fields: ['type', 'user_id'] // TBD
         }
     ]
 });
